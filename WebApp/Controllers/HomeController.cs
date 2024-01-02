@@ -13,6 +13,11 @@ namespace WebApp.Controllers
             _logger = logger;
         }
 
+        public IActionResult Test()
+        {
+            return View();
+        }
+
         public IActionResult Index()
         {
             return View();
