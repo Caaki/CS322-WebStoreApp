@@ -1,0 +1,45 @@
+﻿@page
+@model WebAppRazorPages.Pages.Categories.CreateModel
+
+<form method="post">
+    
+    <div class="border p-3 mt-4">
+        <div class="row pb-2">
+            <h2 class="text-primary">
+                Create Category
+            </h2>
+            <hr/>
+            </div>
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="mb-3 row p-1">
+                <label asp-for="Category.Name" class="p-0">Category Name</label>
+                <input asp-for="Category.Name" class="form-control">
+                <span asp-validation-for="Category.Name" class="text-danger"></span>
+            </div>
+            <div class="mb-3 row p-1">
+                <label asp-for="Category.DisplayOrder" class="p-0">Display order</label>
+                <input asp-for="Category.DisplayOrder" value="1" class="form-control">
+                <span asp-validation-for="Category.DisplayOrder" class="text-danger"></span>
+            </div>
+
+            <div class="row">
+                <div class="col-6 p-1">
+                     <button type="submit" class="btn btn-primary form-control" >
+                         Create</button>
+                </div>
+
+                <div class="col-6 p-1">
+                     <a asp-page="/category/index" class="btn btn-outline-secondary border form-control" >
+                     Back to list</a>
+                </div>
+            </div>
+    </div>
+
+</form>
+
+@section Scripts{
+    @{
+        <partial name="_ValidationScriptsPartial"/>
+    }
+}
+

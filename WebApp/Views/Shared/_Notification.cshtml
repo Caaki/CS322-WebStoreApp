@@ -1,0 +1,33 @@
+﻿@if (TempData["success"] != null)
+{
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
+    switch (TempData["success"]){
+
+        case string successMessage when successMessage.Contains("updated"):
+            <script type="text/javascript">
+            toastr.info('@TempData["success"]');
+            </script>
+            break;
+        case string successMessage when successMessage.Contains("deleted"):
+                <script type="text/javascript">
+                toastr.warning('@TempData["success"]');
+                </script>
+            break;
+        case string successMessage when successMessage.Contains("created"):
+                <script type="text/javascript">
+                toastr.success('@TempData["success"]');
+                </script>
+            break;
+    }
+}
+
+@if (TempData["error"]!= null)
+{
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
+        <script type="text/javascript">
+        toastr.error('@TempData["success"]');
+        </script>
+
+}
