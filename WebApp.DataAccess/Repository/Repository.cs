@@ -15,7 +15,7 @@ namespace WebApp.DataAccess.Repository
         {
             _db = db;
             dbSet = _db.Set<T>();
-        }
+       }
 
         public void Add(T item)
         {
@@ -33,16 +33,35 @@ namespace WebApp.DataAccess.Repository
             dbSet.RemoveRange(items); 
         }
 
-        public T Get(Expression<Func<T, bool>> filter)
+        public T Get(Expression<Func<T, bool>> filter, string? includedProperties =null)
         {
+
+
             IQueryable<T> query = dbSet;
+            if (!string.IsNullOrEmpty(includedProperties))
+            {
+                foreach (var includedProperty in includedProperties
+                    .Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries))
+                {
+                    query = query.Include(includedProperty);
+                }
+            }
             return query.Where(filter).FirstOrDefault();
 
         }
 
-        public IEnumerable<T> GetAll()
+        public IEnumerable<T> GetAll(string? includedProperties =null)
         {
+
             IQueryable<T> query = dbSet;
+            if (!string.IsNullOrEmpty(includedProperties))
+            {
+                foreach (var includedProperty in includedProperties
+                    .Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries))
+                {
+                    query = query.Include(includedProperty);
+                }
+            }
             return query.ToList();
         }
     }
