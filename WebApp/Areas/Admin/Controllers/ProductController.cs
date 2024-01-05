@@ -13,14 +13,17 @@ namespace WebApp.Areas.Admin.Controllers
 
         private readonly IUnitOfWork _unitOfWork;
 
-        public ProductController(IUnitOfWork unitOfWork)
+        private readonly IWebHostEnvironment _webHostEnvironment;
+
+        public ProductController(IUnitOfWork unitOfWork, IWebHostEnvironment webHostEnvironment)
         {
             _unitOfWork = unitOfWork;
+            _webHostEnvironment = webHostEnvironment;
         }
 
         public IActionResult Index()
         {
-            List<Product> objProductList = _unitOfWork.ProductRepository.GetAll().ToList();
+            List<Product> objProductList = _unitOfWork.ProductRepository.GetAll(includedProperties:"Category").ToList();
 
 
             return View(objProductList);
@@ -88,17 +91,72 @@ namespace WebApp.Areas.Admin.Controllers
 
 
 
-       /* [HttpPost]
+        [HttpPost]
         public IActionResult Upsert(ProductVM vm, IFormFile? file)
         {
-            Regex rx = new Regex(".*[0-9].*");
-            if (vm.Product.Author == null || rx.Matches(vm.Product.Author).Count >= 1)
+            string a = vm.Product.ImageUrl;
+
+            if (ModelState.IsValid)
             {
-                ModelState.AddModelError("", "Enter author name in a valid format" + vm.Product.Author);
+                string wwwRootPath = _webHostEnvironment.WebRootPath;
+
+                if (file != null)
+                {
+                    string fileName= Guid.NewGuid().ToString() + Path.GetExtension(file.FileName);
+                    string productPath = Path.Combine(wwwRootPath, @"images\product");
+
+                    if (!string.IsNullOrEmpty(vm.Product.ImageUrl))
+                    {
+                        var oldImage = Path.Combine(wwwRootPath, vm.Product.ImageUrl.TrimStart('\\'));
+                        if (System.IO.File.Exists(oldImage))
+                        {
+                            System.IO.File.Delete(oldImage);
+                        }
+                    }
+
+                    using (var fileStream = new FileStream(Path.Combine(productPath, fileName), FileMode.Create))
+                    {
+                        file.CopyTo(fileStream);
+                        
+                    }
+
+                    vm.Product.ImageUrl = @"\images\product\" + fileName;
+                    
+                }
+
+                if (vm.Product.Id == 0)
+                {
+                    _unitOfWork.ProductRepository.Add(vm.Product);
+                }
+                else
+                {
+                    _unitOfWork.ProductRepository.Update(vm.Product);
+                }
+
+                _unitOfWork.Save();
+                TempData["success"] = "Product created successfully";
+                return RedirectToAction("Index");
+            }else
+            {
+                IEnumerable<SelectListItem> cl = _unitOfWork.CategoryRepository
+                   .GetAll()
+                   .Select(u => new SelectListItem
+                   {
+                       Text = u.Name,
+                       Value = u.Id.ToString()
+                   });
+
+                ProductVM newVM = new()
+                {
+                    CategoryList = cl,
+                    Product = new Product()
+                };
+
+                return View(newVM);
             }
 
         }
-*/
+
 
 
 
