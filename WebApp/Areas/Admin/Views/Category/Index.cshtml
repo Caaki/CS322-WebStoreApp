@@ -43,12 +43,12 @@
 
             <td class="text-center pt-3 pb-0">
             <div class="btn-group text-center" role="group">
-                <a asp-controller="Category" asp-action="Edit" asp-route-id="@obj.Id"
+                <a asp-area="Admin" asp-controller="Category" asp-action="Edit" asp-route-id="@obj.Id"
                 class="btn btn-primary rounded-5 pr-1 pl-1 pt-2 pb-1" style="margin-right:10px">
                     <i class="bi bi-pencil-square"></i>
                 </a>
                 <form method="post">
-                    <button asp-controller="Category" type="submit" asp-action="Delete" asp-route-id="@obj.Id"
+                    <button asp-area="Admin" asp-controller="Category" type="submit" asp-action="Delete" asp-route-id="@obj.Id"
                         class="btn btn-outline-danger rounded-5 pr-1 pl-1 pt-2 pb-1"
                         onclick="return confirm('Are you sure you want to delete this item?');">
                     <i class="bi bi-trash"></i>
