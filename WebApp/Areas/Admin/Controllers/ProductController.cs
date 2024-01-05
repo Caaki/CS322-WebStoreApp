@@ -127,15 +127,17 @@ namespace WebApp.Areas.Admin.Controllers
                 if (vm.Product.Id == 0)
                 {
                     _unitOfWork.ProductRepository.Add(vm.Product);
+                    TempData["success"] = "Product created successfully";
+
                 }
                 else
                 {
                     _unitOfWork.ProductRepository.Update(vm.Product);
+                    TempData["success"] = "Product updated successfully";
                 }
 
                 _unitOfWork.Save();
-                TempData["success"] = "Product created successfully";
-                return RedirectToAction("Index");
+                                return RedirectToAction("Index");
             }else
             {
                 IEnumerable<SelectListItem> cl = _unitOfWork.CategoryRepository
@@ -199,6 +201,7 @@ namespace WebApp.Areas.Admin.Controllers
             }
         }
 
+        /*
         [HttpPost]
         public IActionResult Delete(int? id)
         {
@@ -219,6 +222,7 @@ namespace WebApp.Areas.Admin.Controllers
                 return RedirectToAction("Index", "Product");
             }
         }
+*/
 
         [HttpGet]
         public IActionResult Edit(int? id)
@@ -290,6 +294,45 @@ namespace WebApp.Areas.Admin.Controllers
 
                 return View(vm);
             }
+      }
+
+        #region API
+
+        [HttpGet]
+        public IActionResult GetAll(int id)
+        {
+
+            List<Product> objProductList = _unitOfWork.ProductRepository.GetAll(includedProperties:"Category").ToList();
+            return Json(new { data = objProductList });
         }
+
+        [HttpDelete]
+        public IActionResult Delete(int? id)
+        {
+
+            var toBeDeleted = _unitOfWork.ProductRepository.Get(u => u.Id == id);
+
+            if(toBeDeleted == null)
+            {
+                return Json(new {success =  false, message="Error while deleting"});
+            }
+
+            var oldImage = 
+                Path.Combine(
+                _webHostEnvironment.WebRootPath, toBeDeleted.ImageUrl.TrimStart('\\'));
+
+            if (System.IO.File.Exists(oldImage))
+            {
+                System.IO.File.Delete(oldImage);
+            }
+
+            _unitOfWork.ProductRepository.Delete(toBeDeleted);
+            _unitOfWork.Save();
+
+            return Json(new {success =  true, message="Product deleted successfully"});
+
+        }
+
+        #endregion
     }
 }

@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
+using WebApp.DataAccess.Repository.IRepository;
 using WebApp.Models;
 
 namespace WebApp.Areas.Customer.Controllers
@@ -9,9 +10,14 @@ namespace WebApp.Areas.Customer.Controllers
     {
         private readonly ILogger<HomeController> _logger;
 
-        public HomeController(ILogger<HomeController> logger)
+        private readonly IUnitOfWork _unitOfWork;
+
+
+
+        public HomeController(ILogger<HomeController> logger, IUnitOfWork unitOfWork)
         {
             _logger = logger;
+            _unitOfWork = unitOfWork;
         }
 
         public IActionResult Test()
@@ -21,7 +27,13 @@ namespace WebApp.Areas.Customer.Controllers
 
         public IActionResult Index()
         {
-            return View();
+            IEnumerable<Product> productList = _unitOfWork.ProductRepository.GetAll(includedProperties:"Category");
+            return View(productList);
+        }
+        public IActionResult Details(int id)
+        {
+            Product product = _unitOfWork.ProductRepository.Get(u=>u.Id == id,includedProperties:"Category");
+            return View(product);
         }
 
         public IActionResult Privacy()
