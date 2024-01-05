@@ -1,12 +1,16 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using System.Text.RegularExpressions;
 using WebApp.DataAccess.Data;
 using WebApp.DataAccess.Repository.IRepository;
 using WebApp.Models;
+using WebApp.Utility;
 
 namespace WebApp.Areas.Admin.Controllers
 {
     [Area("Admin")]
+    [Authorize(Roles =SD.Role_Admin)]
+
     public class CategoryController : Controller
     {
 
@@ -15,8 +19,7 @@ namespace WebApp.Areas.Admin.Controllers
         {
             _unitOfWork = unitOfWork;
         }
-
-        public IActionResult Index()
+                public IActionResult Index()
         {
             List<Category> objCategoryList = _unitOfWork.CategoryRepository.GetAll().ToList();
             return View(objCategoryList); ;
