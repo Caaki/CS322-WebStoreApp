@@ -35,7 +35,7 @@ namespace WebApp.Areas.Identity.Pages.Account
         {
             if (userId == null || email == null || code == null)
             {
-                return RedirectToPage("/Index");
+                return RedirectToPage("/Account/Manage/Index");
             }
 
             var user = await _userManager.FindByIdAsync(userId);
