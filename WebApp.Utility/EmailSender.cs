@@ -30,9 +30,8 @@ namespace WebApp.Utility
             }
             catch (Exception ex)
             {
-                // Log the exception details
                 Console.WriteLine($"Error sending email: {ex.Message}");
-                throw; // Rethrow the exception to propagate it up
+                throw;
             }
         }
     }
