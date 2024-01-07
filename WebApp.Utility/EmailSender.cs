@@ -22,7 +22,7 @@ namespace WebApp.Utility
                     EnableSsl = true,
                     DeliveryMethod = SmtpDeliveryMethod.Network,
                     UseDefaultCredentials = false,
-                    Credentials = new NetworkCredential("nikolalazin999@gmail.com", "nfxt mfuv mnik lhcg")
+                    Credentials = new NetworkCredential("nikolalazin999@gmail.com", "web key")
                 })
                 {
                     await client.SendMailAsync("nikolalazin999@gmail.com", email, subject, htmlMessage);
